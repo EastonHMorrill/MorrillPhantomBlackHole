@@ -12,9 +12,8 @@ M_BH = []
 M_Tol = []
 P_Grav = []
 P_Degen = []
-err = []
 
-def Grav(*args):
+def Grav(r):
     return ((1/(r)**2)*(1-((r)/R_NS)**2))
 
 # Given Radius,
@@ -40,17 +39,17 @@ print("Check 1")
 
 r = np.linspace(0, 10000, num=1001) # in m
 
-#P_Grav, err = ((-(15*G*M_NS**2)/(8*math.pi*R_NS**3))*quadrature(Grav(r), 0.001, r)) # in N/m^2
+#P_Grav, err = ((-(15*G*M_NS**2)/(8*math.pi*R_NS**3))*quadrature(Grav(r), 0, r)) # in N/m^2
 P_Degen = ((((math.pi)**3)*(1.054E-34))/(15*(1.675E-27))*(((3*(M_NS*1.989E30))/(1.675E-27))/(((math.pi)**2)*(4/3)*(R_NS)**3))**(5/3)) # in N/m^2
 
 outFilenew = open("PhantomBlackHolePressureData.txt", "w")
 for i in range(0, 1001):
     if (i==0):
         P_Grav.append(0.0)
-        err.append(0.0)
     else:
-        P_Grav.append(((-(15*G*M_NS**2)/(8*math.pi*R_NS**3))*quadrature(Grav(r), 0.001, r))) # in N/m^2
-    outFilenew.write(str(P_Degen) + " " + str(P_Grav) + " " + str(r) + "\n")
+        result, err = quadrature(Grav, 0.001, r[i], tol=1e-6, rtol=1e-6)
+        P_Grav.append(((-(15*G*M_NS**2)/(8*math.pi*R_NS**3))*result)) # in N/m^2
+    outFilenew.write(str(P_Degen[i]) + " " + str(P_Grav[i]) + " " + str(r[i]) + "\n")
 outFilenew.close()
 
 Print("Check 2")
