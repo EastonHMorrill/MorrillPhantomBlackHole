@@ -30,6 +30,11 @@ print(p_c)
 
 r = np.linspace(0, R_NS, 1001)
 
+# The following are EOS dependant variables.
+# For research, choose one stiff, one soft, and one intermediate. Additionally, use universal EOS too.
+
+# Universal
+
 a_0 = 3.70625
 a_1 = (-1.50266)
 a_2 = 0.0643875
@@ -39,7 +44,46 @@ alpha = a_0 + a_1*((C**n)/(rho)) + a_2*((C**n)/(rho))**2
 C_2imp = math.atan(-(2.0*(10.0 - 3.0*alpha)*math.sqrt(6.0*math.pi*rho*(15.0 - 16.0*math.pi*rho)))/((48.0*math.pi*(10.0 - 3.0*alpha)*rho) - 315.0)) + 0.5*math.log((1.0/6.0) + math.sqrt((5.0/(8.0*math.pi*rho)) - (2.0/3.0)))
 phi_imp = C_2imp - 0.5*np.log(xi**2 - (5.0/6.0) + np.sqrt((5.0*E_lamb)/(8*math.pi*rho)))
 
-p_imp = (np.sqrt(E_lamb*rho_c*(G/c**2)/(10.0*math.pi))*(np.tan(phi_imp)/R_NS)) + ((1.0/15.0)*((3.0*xi**2) - 5.0)*rho_c*(G/c**2)) + ((6.0*(1.0-alpha)*rho_c*(G/c**2))/((16.0*math.pi*(10.0 - (3.0*alpha))*rho) - 105))
+p_imp_univ = (np.sqrt(E_lamb*rho_c*(G/c**2)/(10.0*math.pi))*(np.tan(phi_imp)/R_NS)) + ((1.0/15.0)*((3.0*xi**2) - 5.0)*rho_c*(G/c**2)) + ((6.0*(1.0-alpha)*rho_c*(G/c**2))/((16.0*math.pi*(10.0 - (3.0*alpha))*rho) - 105))
+
+# Stiff, Shen
+
+a_0 = 4.05847
+a_1 = (-1.92481)
+a_2 = 0.187936
+n = 0.906579
+
+alpha = a_0 + a_1*((C**n)/(rho)) + a_2*((C**n)/(rho))**2
+C_2imp = math.atan(-(2.0*(10.0 - 3.0*alpha)*math.sqrt(6.0*math.pi*rho*(15.0 - 16.0*math.pi*rho)))/((48.0*math.pi*(10.0 - 3.0*alpha)*rho) - 315.0)) + 0.5*math.log((1.0/6.0) + math.sqrt((5.0/(8.0*math.pi*rho)) - (2.0/3.0)))
+phi_imp = C_2imp - 0.5*np.log(xi**2 - (5.0/6.0) + np.sqrt((5.0*E_lamb)/(8*math.pi*rho)))
+
+p_imp_stiff = (np.sqrt(E_lamb*rho_c*(G/c**2)/(10.0*math.pi))*(np.tan(phi_imp)/R_NS)) + ((1.0/15.0)*((3.0*xi**2) - 5.0)*rho_c*(G/c**2)) + ((6.0*(1.0-alpha)*rho_c*(G/c**2))/((16.0*math.pi*(10.0 - (3.0*alpha))*rho) - 105))
+
+# Soft, AP4
+
+a_0 = 3.90061
+a_1 = (-1.67716)
+a_2 = 0.112974
+n = 0.884655
+
+alpha = a_0 + a_1*((C**n)/(rho)) + a_2*((C**n)/(rho))**2
+C_2imp = math.atan(-(2.0*(10.0 - 3.0*alpha)*math.sqrt(6.0*math.pi*rho*(15.0 - 16.0*math.pi*rho)))/((48.0*math.pi*(10.0 - 3.0*alpha)*rho) - 315.0)) + 0.5*math.log((1.0/6.0) + math.sqrt((5.0/(8.0*math.pi*rho)) - (2.0/3.0)))
+phi_imp = C_2imp - 0.5*np.log(xi**2 - (5.0/6.0) + np.sqrt((5.0*E_lamb)/(8*math.pi*rho)))
+
+p_imp_soft = (np.sqrt(E_lamb*rho_c*(G/c**2)/(10.0*math.pi))*(np.tan(phi_imp)/R_NS)) + ((1.0/15.0)*((3.0*xi**2) - 5.0)*rho_c*(G/c**2)) + ((6.0*(1.0-alpha)*rho_c*(G/c**2))/((16.0*math.pi*(10.0 - (3.0*alpha))*rho) - 105))
+
+# Intermediate, ENG
+
+a_0 = 0.438372
+a_1 = 1.28922
+a_2 = (-0.506597)
+n = 0.874422
+
+alpha = a_0 + a_1*((C**n)/(rho)) + a_2*((C**n)/(rho))**2
+C_2imp = math.atan(-(2.0*(10.0 - 3.0*alpha)*math.sqrt(6.0*math.pi*rho*(15.0 - 16.0*math.pi*rho)))/((48.0*math.pi*(10.0 - 3.0*alpha)*rho) - 315.0)) + 0.5*math.log((1.0/6.0) + math.sqrt((5.0/(8.0*math.pi*rho)) - (2.0/3.0)))
+phi_imp = C_2imp - 0.5*np.log(xi**2 - (5.0/6.0) + np.sqrt((5.0*E_lamb)/(8*math.pi*rho)))
+
+p_imp_int = (np.sqrt(E_lamb*rho_c*(G/c**2)/(10.0*math.pi))*(np.tan(phi_imp)/R_NS)) + ((1.0/15.0)*((3.0*xi**2) - 5.0)*rho_c*(G/c**2)) + ((6.0*(1.0-alpha)*rho_c*(G/c**2))/((16.0*math.pi*(10.0 - (3.0*alpha))*rho) - 105))
 
 #Neutron Degeneracy Pressure
 
@@ -50,9 +94,20 @@ p_deg.fill(p_degen)
 #Plotting
 
 plt.plot(r/R_NS, p_tol/p_c)
-plt.plot(r/R_NS, p_imp/p_c)
+plt.plot(r/R_NS, p_imp_univ/p_c)
 plt.plot(r/R_NS, p_deg/p_c)
-plt.legend(["P_Tol/P_C", "P_Imp/P_C", "P_Deg/P_C"])
+plt.legend(["P_Tol/P_C", "P_Imp_Univ/P_C", "P_Deg/P_C"])
 plt.xlabel("r/R_NS")
 plt.ylabel("P/P_C")
 plt.savefig("PressurePlot.pdf")
+plt.close()
+
+plt.plot(r/R_NS, p_imp_univ/p_c)
+plt.plot(r/R_NS, p_imp_soft/p_c)
+plt.plot(r/R_NS, p_imp_stiff/p_c)
+plt.plot(r/R_NS, p_imp_int/p_c)
+plt.legend(["Universal", "Soft", "Stiff", "Intermediate"])
+plt.xlabel("r/R_NS")
+plt.ylabel("P_Improved/P_C")
+plt.savefig("ImprovedComparison.pdf")
+plt.close()
